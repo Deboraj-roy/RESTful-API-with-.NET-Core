@@ -51,6 +51,12 @@ namespace ASP_BasicAPI.Controllers
             //{
             //    return BadRequest(ModelState);
             //}
+
+            if (PersonsData.personList.FirstOrDefault( u => u.Name.ToLower() == personDTO.Name.ToLower()) != null)
+            {
+                ModelState.AddModelError("Custom Error", "Person already exists!");
+                return BadRequest(ModelState);
+            }
             if (personDTO == null)
             {
                 return BadRequest(personDTO);
