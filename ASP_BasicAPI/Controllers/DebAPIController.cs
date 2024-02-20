@@ -96,14 +96,14 @@ namespace ASP_BasicAPI.Controllers
         }
 
         // To Remove all || This will clear all elements from the personList.
-        [HttpDelete]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult DeletePersons()
-        {  
-            PersonsData.personList.Clear();
-            return NoContent();
-        }
+        //[HttpDelete]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public ActionResult DeletePersons()
+        //{  
+        //    PersonsData.personList.Clear();
+        //    return NoContent();
+        //}
     }
 }
