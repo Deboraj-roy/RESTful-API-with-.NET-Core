@@ -74,5 +74,36 @@ namespace ASP_BasicAPI.Controllers
             return CreatedAtRoute("GetPerson", new { id = personDTO.Id }, personDTO);
         }
 
+        [HttpDelete("{id:int}", Name = "DeletePerson")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult DeletePerson(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            PersonsData.personList.Remove(person);
+            return NoContent();
+        }
+
+        // To Remove all || This will clear all elements from the personList.
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult DeletePersons()
+        {  
+            PersonsData.personList.Clear();
+            return NoContent();
+        }
     }
 }
