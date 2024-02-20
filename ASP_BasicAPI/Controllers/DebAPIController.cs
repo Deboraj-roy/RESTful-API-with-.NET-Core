@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ASP_BasicAPI.Controllers
 {
-    [Route("api/DebAPI")]
+    [Route("api/[controller]")]
     [ApiController]
     public class DebAPIController : Controller 
     {
