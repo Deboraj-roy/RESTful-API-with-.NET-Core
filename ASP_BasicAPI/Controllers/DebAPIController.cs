@@ -8,7 +8,7 @@ namespace ASP_BasicAPI.Controllers
     //[Route("api/[Controller]")
     [Route("api/DebAPI")]
     [ApiController]
-    public class DebAPIController : Controller 
+    public class DebAPIController : Controller
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -38,5 +38,30 @@ namespace ASP_BasicAPI.Controllers
 
             return Ok(person);
         }
+
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<PersonDTO> CreatePerson([FromBody] PersonDTO personDTO)
+        {
+            if (personDTO == null)
+            {
+                return BadRequest(personDTO);
+            }
+
+            if (personDTO.Id > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            personDTO.Id = PersonsData.personList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+            PersonsData.personList.Add(personDTO);
+
+            return Ok(personDTO);
+        }
+
     }
 }
