@@ -18,7 +18,7 @@ namespace ASP_BasicAPI.Controllers
             return Ok(PersonsData.personList);
         }
 
-        [HttpGet("{id:int}")] // Mention that you required ID
+        [HttpGet("{id:int}", Name = "GetPerson")] // Mention that you required ID
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,7 +41,7 @@ namespace ASP_BasicAPI.Controllers
 
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -60,7 +60,8 @@ namespace ASP_BasicAPI.Controllers
             personDTO.Id = PersonsData.personList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
             PersonsData.personList.Add(personDTO);
 
-            return Ok(personDTO);
+            //return Ok(personDTO);
+            return CreatedAtRoute("GetPerson", new { id = personDTO.Id }, personDTO);
         }
 
     }
