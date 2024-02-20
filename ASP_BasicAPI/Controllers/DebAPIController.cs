@@ -7,7 +7,7 @@ namespace ASP_BasicAPI.Controllers
 {
     //[Route("api/[Controller]")
     [Route("api/DebAPI")]
-    //[ApiController]
+    [ApiController]
     public class DebAPIController : Controller
     {
         [HttpGet]
@@ -47,10 +47,10 @@ namespace ASP_BasicAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<PersonDTO> CreatePerson([FromBody] PersonDTO personDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
             if (personDTO == null)
             {
                 return BadRequest(personDTO);
