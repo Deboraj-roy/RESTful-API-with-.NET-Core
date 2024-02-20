@@ -11,9 +11,15 @@ namespace ASP_BasicAPI.Controllers
     public class DebAPIController : Controller 
     {
         [HttpGet]
-        public IEnumerable<PersonDTO> Persons()
+        public IEnumerable<PersonDTO> GetPersons()
         {
             return PersonsData.personList;
+        }
+
+        [HttpGet("{id:int}")] // Mention that you required ID
+        public PersonDTO GetPerson(int id)
+        {
+            return PersonsData.personList.FirstOrDefault(u => u.Id == id);
         }
     }
 }
