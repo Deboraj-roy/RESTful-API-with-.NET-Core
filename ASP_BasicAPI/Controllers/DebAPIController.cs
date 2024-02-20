@@ -1,19 +1,21 @@
 ﻿using ASP_BasicAPI.Models;
+using ASP_BasicAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP_BasicAPI.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[Controller]")
+    [Route("api/DebAPI")]
     [ApiController]
     public class DebAPIController : Controller 
     {
         [HttpGet]
-        public IEnumerable<Person> Persons()
+        public IEnumerable<PersonDTO> Persons()
         {
-            return new List<Person>
+            return new List<PersonDTO>
             {
-                new Person{ Id = 1, Name = "Sujon Roy"},
-                new Person{ Id = 2, Name = "Polok Roy"}
+                new PersonDTO{ Id = 1, Name = "Sujon Roy"},
+                new PersonDTO{ Id = 2, Name = "Polok Roy"}
             };
         }
     }
