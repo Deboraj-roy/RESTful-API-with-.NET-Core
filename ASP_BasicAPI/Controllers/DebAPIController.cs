@@ -52,7 +52,7 @@ namespace ASP_BasicAPI.Controllers
             //    return BadRequest(ModelState);
             //}
 
-            if (PersonsData.personList.FirstOrDefault( u => u.Name.ToLower() == personDTO.Name.ToLower()) != null)
+            if (PersonsData.personList.FirstOrDefault(u => u.Name.ToLower() == personDTO.Name.ToLower()) != null)
             {
                 ModelState.AddModelError("Custom Error", "Person already exists!");
                 return BadRequest(ModelState);
@@ -78,7 +78,8 @@ namespace ASP_BasicAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult DeletePerson(int id)
+        //IActionResult not need to define return type.
+        public IActionResult DeletePerson(int id)
         {
             if (id == 0)
             {
@@ -105,5 +106,26 @@ namespace ASP_BasicAPI.Controllers
         //    PersonsData.personList.Clear();
         //    return NoContent();
         //}
+
+        [HttpPut("{id:int}", Name = "UpdatePerson")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult UpdatePerson(int id,[FromBody] PersonDTO personDTO)
+        {
+            if(personDTO == null || id != personDTO.Id)
+            {
+                return BadRequest();
+            }
+            var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+            person.Name = personDTO.Name;
+            person.Gender = personDTO.Gender;
+            person.Age = personDTO.Age;
+
+            return NoContent();
+        }
     }
 }

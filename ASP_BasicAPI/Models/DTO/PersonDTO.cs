@@ -9,5 +9,7 @@ namespace ASP_BasicAPI.Models.DTO
         [Required]
         [MaxLength(30)]
         public string Name { get; set; }
+        public char Gender { get; set; }
+        public int Age { get; set;}
     }
 }
