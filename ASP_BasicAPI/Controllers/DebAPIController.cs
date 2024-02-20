@@ -11,6 +11,7 @@ namespace ASP_BasicAPI.Controllers
     public class DebAPIController : Controller 
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<PersonDTO>> GetPersons()
         {
             //ActionResult we can return any type of returntype
@@ -18,6 +19,11 @@ namespace ASP_BasicAPI.Controllers
         }
 
         [HttpGet("{id:int}")] // Mention that you required ID
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(200, Type = typeof(PersonDTO))]
+        //[ProducesResponseType(200)]
         public ActionResult<PersonDTO> GetPerson(int id)
         {
             if (id == 0)
