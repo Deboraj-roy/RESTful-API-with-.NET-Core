@@ -11,10 +11,18 @@ namespace ASP_BasicAPI.Controllers
     [ApiController]
     public class DebAPIController : Controller
     {
+        private readonly ILogger<PersonDTO> _logger;
+
+        public DebAPIController(ILogger<PersonDTO> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<PersonDTO>> GetPersons()
         {
+            _logger.LogInformation("Get all people");
             //ActionResult we can return any type of returntype
             return Ok(PersonsData.personList);
         }
@@ -29,11 +37,13 @@ namespace ASP_BasicAPI.Controllers
         {
             if (id == 0)
             {
+                _logger.LogError("Get Person error with Id: " + id);
                 return BadRequest();
             }
             var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
             if (person == null)
             {
+                _logger.LogInformation("Person Not Found with Id: " + id);
                 return NotFound();
             }
 
