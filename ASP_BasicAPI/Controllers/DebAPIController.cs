@@ -1,6 +1,7 @@
 ﻿using ASP_BasicAPI.Data;
 using ASP_BasicAPI.Models;
 using ASP_BasicAPI.Models.DTO;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP_BasicAPI.Controllers
@@ -124,6 +125,31 @@ namespace ASP_BasicAPI.Controllers
             person.Name = personDTO.Name;
             person.Gender = personDTO.Gender;
             person.Age = personDTO.Age;
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id:int}", Name = "UpdatePartialPerson")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult UpdatePartialPerson(int id, JsonPatchDocument<PersonDTO> personDTO)
+        {
+            if (personDTO == null || id == 0)
+            {
+                return BadRequest();
+            }
+            var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            personDTO.ApplyTo(person, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             return NoContent();
         }
