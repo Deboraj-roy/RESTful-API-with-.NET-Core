@@ -1,7 +1,16 @@
 
+using ASP_BasicAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+//Database Connections
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+});
 
 //Serilog configure
 /*Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
