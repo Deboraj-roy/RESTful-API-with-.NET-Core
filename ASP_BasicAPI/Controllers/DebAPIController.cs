@@ -3,6 +3,7 @@ using ASP_BasicAPI.Models;
 using ASP_BasicAPI.Models.DTO;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP_BasicAPI.Controllers
 {
@@ -10,10 +11,12 @@ namespace ASP_BasicAPI.Controllers
     [Route("api/DebAPI")]
     [ApiController]
     public class DebAPIController : Controller
-    { 
-        
-        public DebAPIController()
+    {
+        private readonly ApplicationDbContext _db;
+
+        public DebAPIController(ApplicationDbContext db)
         {
+            _db = db;
         }
 
         [HttpGet]
@@ -21,7 +24,7 @@ namespace ASP_BasicAPI.Controllers
         public ActionResult<IEnumerable<PersonDTO>> GetPersons()
         {
             //ActionResult we can return any type of returntype
-            return Ok(PersonsData.personList);
+            return Ok(_db.Persons.ToList());
         }
 
         [HttpGet("{id:int}", Name = "GetPerson")] // Mention that you required ID
@@ -34,9 +37,9 @@ namespace ASP_BasicAPI.Controllers
         {
             if (id == 0)
             {
-               return BadRequest();
+                return BadRequest();
             }
-            var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            var person = _db.Persons.FirstOrDefault(u => u.Id == id);
             if (person == null)
             {
                 return NotFound();
@@ -58,7 +61,7 @@ namespace ASP_BasicAPI.Controllers
             //    return BadRequest(ModelState);
             //}
 
-            if (PersonsData.personList.FirstOrDefault(u => u.Name.ToLower() == personDTO.Name.ToLower()) != null)
+            if (_db.Persons.FirstOrDefault(u => u.Name.ToLower() == personDTO.Name.ToLower()) != null)
             {
                 ModelState.AddModelError("Custom Error", "Person already exists!");
                 return BadRequest(ModelState);
@@ -73,8 +76,21 @@ namespace ASP_BasicAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            personDTO.Id = PersonsData.personList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
-            PersonsData.personList.Add(personDTO);
+            Person model = new()
+            {
+                Id = personDTO.Id,
+                Name = personDTO.Name,
+                Gender = personDTO.Gender,
+                Age = personDTO.Age,
+                Details = personDTO.Details,
+                Salary = personDTO.Salary,
+                ImageUrl = personDTO.ImageUrl,
+                Occupation = personDTO.Occupation,
+                CreatedDate = DateTime.UtcNow
+            };
+         
+            _db.Persons.Add(model);
+            _db.SaveChanges();
 
             //return Ok(personDTO);
             return CreatedAtRoute("GetPerson", new { id = personDTO.Id }, personDTO);
@@ -92,13 +108,14 @@ namespace ASP_BasicAPI.Controllers
                 return BadRequest();
             }
 
-            var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            var person = _db.Persons.FirstOrDefault(u => u.Id == id);
             if (person == null)
             {
                 return NotFound();
             }
 
-            PersonsData.personList.Remove(person);
+            _db.Persons.Remove(person);
+            _db.SaveChanges();
             return NoContent();
         }
 
@@ -122,14 +139,29 @@ namespace ASP_BasicAPI.Controllers
             {
                 return BadRequest();
             }
-            var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            //var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            //person.Name = personDTO.Name;
+            //person.Gender = personDTO.Gender;
+            //person.Age = personDTO.Age;
+
+            var person = _db.Persons.FirstOrDefault(u => u.Id == id);
+
             if (person == null)
             {
                 return NotFound();
             }
+
+            // Map properties from PersonDTO to Person
             person.Name = personDTO.Name;
             person.Gender = personDTO.Gender;
             person.Age = personDTO.Age;
+            person.Details = personDTO.Details;
+            person.Salary = personDTO.Salary;
+            person.ImageUrl = personDTO.ImageUrl;
+            person.Occupation = personDTO.Occupation;
+            person.UpdatedDate = DateTime.Now;
+
+            _db.SaveChanges();
 
             return NoContent();
         }
@@ -137,24 +169,87 @@ namespace ASP_BasicAPI.Controllers
         [HttpPatch("{id:int}", Name = "UpdatePartialPerson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdatePartialPerson(int id, JsonPatchDocument<PersonDTO> personDTO)
+        public IActionResult UpdatePartialPerson(int id, JsonPatchDocument<PersonDTO> patchDTO)
         {
-            if (personDTO == null || id == 0)
+            if (patchDTO == null || id == 0)
             {
                 return BadRequest();
             }
-            var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
+            var person = _db.Persons.FirstOrDefault(u => u.Id == id);
             if (person == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            personDTO.ApplyTo(person, ModelState);
+/*
+            PersonDTO personDTO = new()
+            {
+                Name = person.Name,
+                Gender = person.Gender,
+                Age = person.Age,
+                Details = person.Details,
+                Salary = person.Salary,
+                ImageUrl = person.ImageUrl,
+                Occupation = person.Occupation
+            };
+            patchDTO.ApplyTo(personDTO, ModelState);
+
+            var model = new Person()
+            {
+                Name = personDTO.Name,
+                Gender = personDTO.Gender,
+                Age = personDTO.Age,
+                Details = personDTO.Details,
+                Salary = personDTO.Salary,
+                ImageUrl = personDTO.ImageUrl,
+                Occupation = personDTO.Occupation,
+                UpdatedDate = DateTime.Now
+            };
+
+            _db.Persons.Update(model);
+            _db.SaveChanges();
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+*/
+            // Get the PersonDTO from the database entity
+            var personDTO2 = new PersonDTO
+            {
+                Id = person.Id,
+                Name = person.Name,
+                Gender = person.Gender,
+                Age = person.Age,
+                Details = person.Details,
+                Salary = person.Salary,
+                ImageUrl = person.ImageUrl,
+                Occupation = person.Occupation
+            };
+
+            // Apply the patch document to the DTO  
+            patchDTO.ApplyTo(personDTO2, ModelState);
+             
+            // Validate the patched DTO
+            TryValidateModel(patchDTO);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Map properties from patched DTO back to the entity
+            person.Name = personDTO2.Name;
+            person.Gender = personDTO2.Gender;
+            person.Age = personDTO2.Age;
+            person.Details = personDTO2.Details;
+            person.Salary = personDTO2.Salary;
+            person.ImageUrl = personDTO2.ImageUrl;
+            person.Occupation = personDTO2.Occupation;
+            person.UpdatedDate = DateTime.Now;
+
+            _db.SaveChanges();
+
 
             return NoContent();
         }
