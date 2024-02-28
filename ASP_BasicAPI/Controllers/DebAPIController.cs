@@ -1,4 +1,5 @@
 ﻿using ASP_BasicAPI.Data;
+using ASP_BasicAPI.Logging;
 using ASP_BasicAPI.Models;
 using ASP_BasicAPI.Models.DTO;
 using Microsoft.AspNetCore.JsonPatch;
@@ -11,9 +12,9 @@ namespace ASP_BasicAPI.Controllers
     [ApiController]
     public class DebAPIController : Controller
     {
-        private readonly ILogger<PersonDTO> _logger;
+        private readonly ILogging _logger;
 
-        public DebAPIController(ILogger<PersonDTO> logger)
+        public DebAPIController(ILogging logger)
         {
             _logger = logger;
         }
@@ -22,7 +23,7 @@ namespace ASP_BasicAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<PersonDTO>> GetPersons()
         {
-            _logger.LogInformation("Get all people");
+            _logger.Log("Get all people", "Information");
             //ActionResult we can return any type of returntype
             return Ok(PersonsData.personList);
         }
@@ -37,13 +38,14 @@ namespace ASP_BasicAPI.Controllers
         {
             if (id == 0)
             {
-                _logger.LogError("Get Person error with Id: " + id);
+                _logger.Log("Get Person error with Id: " + id, "error");
+                _logger.Log("Get Person error with Id: " + id, "warning");
                 return BadRequest();
             }
             var person = PersonsData.personList.FirstOrDefault(u => u.Id == id);
             if (person == null)
             {
-                _logger.LogInformation("Person Not Found with Id: " + id);
+                _logger.Log("Person Not Found with Id: " + id, "Information");
                 return NotFound();
             }
 
