@@ -175,14 +175,14 @@ namespace ASP_BasicAPI.Controllers
             {
                 return BadRequest();
             }
-            var person = _db.Persons.FirstOrDefault(u => u.Id == id);
+            var person = _db.Persons.AsNoTracking().FirstOrDefault(u => u.Id == id);
             if (person == null)
             {
                 return BadRequest();
             }
 
-/*
-            PersonDTO personDTO = new()
+
+            PersonDTO persnDTO = new()
             {
                 Name = person.Name,
                 Gender = person.Gender,
@@ -192,18 +192,18 @@ namespace ASP_BasicAPI.Controllers
                 ImageUrl = person.ImageUrl,
                 Occupation = person.Occupation
             };
-            patchDTO.ApplyTo(personDTO, ModelState);
+            patchDTO.ApplyTo(persnDTO, ModelState);
 
-            var model = new Person()
+            Person model = new Person()
             {
-                Name = personDTO.Name,
-                Gender = personDTO.Gender,
-                Age = personDTO.Age,
-                Details = personDTO.Details,
-                Salary = personDTO.Salary,
-                ImageUrl = personDTO.ImageUrl,
-                Occupation = personDTO.Occupation,
-                UpdatedDate = DateTime.Now
+                Name = persnDTO.Name,
+                Gender = persnDTO.Gender,
+                Age = persnDTO.Age,
+                Details = persnDTO.Details,
+                Salary = persnDTO.Salary,
+                ImageUrl = persnDTO.ImageUrl,
+                Occupation = persnDTO.Occupation,
+                //UpdatedDate = DateTime.Now
             };
 
             _db.Persons.Update(model);
@@ -213,9 +213,9 @@ namespace ASP_BasicAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-*/
+
             // Get the PersonDTO from the database entity
-            var personDTO2 = new PersonDTO
+            /*var personDTO2 = new PersonDTO
             {
                 Id = person.Id,
                 Name = person.Name,
@@ -250,7 +250,7 @@ namespace ASP_BasicAPI.Controllers
 
             _db.SaveChanges();
 
-
+*/
             return NoContent();
         }
 
