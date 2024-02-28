@@ -6,12 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//Database Connections
-builder.Services.AddDbContext<ApplicationDbContext>(option =>
+//Database Connections 
+builder.Services.AddDbContext<ApplicationDbContext>(option => 
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
-
 //Serilog configure
 /*Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
     .WriteTo.File("Logs/web-log-.log", rollingInterval: RollingInterval.Day).CreateLogger();
