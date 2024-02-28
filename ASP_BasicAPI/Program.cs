@@ -1,4 +1,4 @@
-
+using AutoMapper;
 using ASP_BasicAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,9 +22,13 @@ builder.Services.AddControllers(option =>
     //option.ReturnHttpNotAcceptable = true;
 }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
 
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(); 
 
 var app = builder.Build();
 

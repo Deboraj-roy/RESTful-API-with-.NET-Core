@@ -1,6 +1,7 @@
 ﻿using ASP_BasicAPI.Data;
 using ASP_BasicAPI.Models;
 using ASP_BasicAPI.Models.DTO;
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace ASP_BasicAPI.Controllers
     public class DebAPIController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IMapper _mapper;
 
-        public DebAPIController(ApplicationDbContext db)
+        public DebAPIController(ApplicationDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -86,7 +89,7 @@ namespace ASP_BasicAPI.Controllers
                 Salary = personDTO.Salary,
                 ImageUrl = personDTO.ImageUrl,
                 Occupation = personDTO.Occupation,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
          
             _db.Persons.Add(model);
@@ -175,48 +178,29 @@ namespace ASP_BasicAPI.Controllers
             {
                 return BadRequest();
             }
+
             var person = _db.Persons.FirstOrDefault(u => u.Id == id);
             if (person == null)
             {
                 return NotFound();
             }
 
-            // Get the PersonDTO from the database entity
-            var personDTO2 = new PersonDTO
-            {
-                Id = person.Id,
-                Name = person.Name,
-                Gender = person.Gender,
-                Age = person.Age,
-                Details = person.Details,
-                Salary = person.Salary,
-                ImageUrl = person.ImageUrl,
-                Occupation = person.Occupation
-            };
+            var personDTO = _mapper.Map<PersonDTO>(person);
 
-            // Apply the patch document to the DTO  
-            patchDTO.ApplyTo(personDTO2, ModelState);
+            patchDTO.ApplyTo(personDTO, ModelState);
 
-            // Validate the patched DTO
-            TryValidateModel(patchDTO);
+            TryValidateModel(personDTO);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Map properties from patched DTO back to the entity
-            person.Name = personDTO2.Name;
-            person.Gender = personDTO2.Gender;
-            person.Age = personDTO2.Age;
-            person.Details = personDTO2.Details;
-            person.Salary = personDTO2.Salary;
-            person.ImageUrl = personDTO2.ImageUrl;
-            person.Occupation = personDTO2.Occupation;
+            _mapper.Map(personDTO, person);
+
             person.UpdatedDate = DateTime.Now;
 
             _db.SaveChanges();
-
 
             return NoContent();
         }
