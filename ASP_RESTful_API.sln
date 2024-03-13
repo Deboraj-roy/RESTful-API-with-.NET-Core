@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP_BasicAPI", "ASP_BasicAPI\ASP_BasicAPI.csproj", "{D619B8AD-3FD6-4AD5-8A95-016C4F6AE3DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP_RESTful_API", "ASP_RESTful_API\ASP_RESTful_API.csproj", "{547568EC-AA57-470C-A1C3-4FCBDDA541BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D619B8AD-3FD6-4AD5-8A95-016C4F6AE3DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D619B8AD-3FD6-4AD5-8A95-016C4F6AE3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D619B8AD-3FD6-4AD5-8A95-016C4F6AE3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D619B8AD-3FD6-4AD5-8A95-016C4F6AE3DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{547568EC-AA57-470C-A1C3-4FCBDDA541BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{547568EC-AA57-470C-A1C3-4FCBDDA541BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{547568EC-AA57-470C-A1C3-4FCBDDA541BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{547568EC-AA57-470C-A1C3-4FCBDDA541BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
