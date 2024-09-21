@@ -12,7 +12,7 @@ In this repository, we'll delve into the basics of building RESTful APIs using .
 
 
 ## Try it Out!
-Feeling eager to dive in? You can try out the simple CRUD application built during this course on our live demo site: [Basic REST API Demo](https://basicrestapi.azurewebsites.net/swagger/index.html)
+Feeling eager to dive in? You can try out the simple CRUD application built during this course on our live demo site: [Basic REST API Demo](https://aubreeazure.bsite.net/swagger/index.html)
 
 ## Get Started
 Ready to embark on your journey into the world of .NET API development? Let's begin!
